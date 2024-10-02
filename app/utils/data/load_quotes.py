@@ -1,6 +1,6 @@
 import json
 
-from app.utils.core.config import input_dir
+from utils.core.config import input_dir
 
 def load_quotes_from_json():
     file_path = input_dir + "/quotes.json"

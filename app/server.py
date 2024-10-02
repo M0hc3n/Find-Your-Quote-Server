@@ -6,14 +6,16 @@ import asyncio
 import aiohttp
 import aiofiles
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.exceptions import HTTPException
 
-from app.utils.api.api_models import SimilarQuotesResponse
-from app.model.inference import find_similar_quotes
-from app.utils.model.load_model import load_model
-from app.utils.data.load_quotes import load_quotes_from_json
+from utils.api.api_models import SimilarQuotesResponse
+from model.inference import find_similar_quotes
+from utils.model.load_model import load_model
+from utils.data.load_quotes import load_quotes_from_json
+
+from utils.api.api_models import QueryRequest, QuoteResponse, SimilarQuotesResponse
 
 app = FastAPI()
-app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
 vector_db, model = load_model()
 quotes = load_quotes_from_json()
@@ -31,7 +33,7 @@ app.add_middleware(
 )
 
 @app.post("/find-similar-quotes", response_model=SimilarQuotesResponse)
-async def find_similar_quotes(query: QueryRequest):
+async def infere_similar_quotes(query: QueryRequest):
     try:
         similar_indices = find_similar_quotes(query.prompt, vector_db, model, k=query.num_results)
         similar_quotes = [QuoteResponse(text=quotes[i]['Quote'], author=quotes[i]['Author']) for i in similar_indices]

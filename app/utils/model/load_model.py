@@ -1,8 +1,9 @@
 import faiss
+import os
 
 from sentence_transformers import SentenceTransformer
 
-from app.utils.core.config import save_dir
+from utils.core.config import save_dir
 
 def load_model():
     vector_db = faiss.read_index(os.path.join(save_dir, "faiss_index.bin"))

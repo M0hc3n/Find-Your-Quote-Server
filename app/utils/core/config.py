@@ -1,2 +1,2 @@
-save_dir = "data/model-dump"
-input_dir = "data/quotes-json"
+save_dir = "data/model-dump/quote_model"
+input_dir = "data/archive"
