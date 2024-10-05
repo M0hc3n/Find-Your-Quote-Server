@@ -6,8 +6,9 @@ class QueryRequest(BaseModel):
     num_results: int = 5
 
 class QuoteResponse(BaseModel):
-    text: str
+    response: str
     author: str
+    category: List[str]
 
 class SimilarQuotesResponse(BaseModel):
     similar_quotes: List[QuoteResponse]

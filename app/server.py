@@ -28,15 +28,15 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=origins,
+    allow_headers=origins,
 )
 
 @app.post("/find-similar-quotes", response_model=SimilarQuotesResponse)
 async def infere_similar_quotes(query: QueryRequest):
     try:
         similar_indices = find_similar_quotes(query.prompt, vector_db, model, k=query.num_results)
-        similar_quotes = [QuoteResponse(text=quotes[i]['Quote'], author=quotes[i]['Author']) for i in similar_indices]
+        similar_quotes = [QuoteResponse(response=quotes[i]['Quote'], author=quotes[i]['Author'], category=quotes[i]["Tags"]) for i in similar_indices]
         return SimilarQuotesResponse(similar_quotes=similar_quotes)
 
     except Exception as e:
@@ -44,4 +44,4 @@ async def infere_similar_quotes(query: QueryRequest):
 
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=3987)
+    uvicorn.run(app, port=3987)
