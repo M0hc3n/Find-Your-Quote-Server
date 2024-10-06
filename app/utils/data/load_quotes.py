@@ -3,7 +3,7 @@ import json
 from utils.core.config import input_dir
 
 def load_quotes_from_json():
-    file_path = input_dir + "/quotes.json"
+    file_path = input_dir + "/full_quotes_json.json"
     try:
         with open(file_path, 'r', encoding='utf-8') as file:
             quotes = json.load(file)
