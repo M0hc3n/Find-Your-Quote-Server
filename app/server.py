@@ -36,7 +36,7 @@ app.add_middleware(
 async def infere_similar_quotes(query: QueryRequest):
     try:
         similar_indices = find_similar_quotes(query.prompt, vector_db, model, k=query.num_results)
-        similar_quotes = [QuoteResponse(response=quotes[i]['Quote'], author=quotes[i]['Author'], category=quotes[i]["Tags"]) for i in similar_indices]
+        similar_quotes = [QuoteResponse(response=quotes[i]['Quote'], author=quotes[i]['Author'], category=quotes[i]["Category"]) for i in similar_indices]
         return SimilarQuotesResponse(similar_quotes=similar_quotes)
 
     except Exception as e:

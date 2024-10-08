@@ -8,7 +8,7 @@ class QueryRequest(BaseModel):
 class QuoteResponse(BaseModel):
     response: str
     author: str
-    category: List[str]
+    category: str
 
 class SimilarQuotesResponse(BaseModel):
     similar_quotes: List[QuoteResponse]
