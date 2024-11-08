@@ -1,10 +1,7 @@
 from fastapi import FastAPI, File
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
-import uvicorn
-import asyncio
-import aiohttp
-import aiofiles
+import uvicorn, aiohttp, asyncio, aiofiles, os
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.exceptions import HTTPException
 
@@ -14,6 +11,15 @@ from utils.model.load_model import load_model
 from utils.data.load_quotes import load_quotes_from_json
 
 from utils.api.api_models import QueryRequest, QuoteResponse, SimilarQuotesResponse
+
+from utils.model.call_llama import call_llama
+from utils.api.llama_output_formatter import output_formatter
+
+from getpass import getpass
+
+REPLICATE_API_TOKEN = getpass()
+
+os.environ["REPLICATE_API_TOKEN"] = REPLICATE_API_TOKEN
 
 app = FastAPI()
 
@@ -39,6 +45,18 @@ async def infere_similar_quotes(query: QueryRequest):
         similar_quotes = [QuoteResponse(response=quotes[i]['Quote'], author=quotes[i]['Author'], category=quotes[i]["Category"]) for i in similar_indices]
         return SimilarQuotesResponse(similar_quotes=similar_quotes)
 
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+    
+@app.post("/find-similar-quotes-using-llama")
+async def infere_similar_quotes(query: QueryRequest, response_model=SimilarQuotesResponse):
+    try:
+        output = call_llama(query.prompt)
+        print(output)
+        res = output_formatter(output)
+        
+        return SimilarQuotesResponse(similar_quotes=[res])
+                
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 

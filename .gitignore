@@ -1,4 +1,6 @@
 app/export.pkl
+*/*/__pycache__
 
+.env
 env
 data
