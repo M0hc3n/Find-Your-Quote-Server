@@ -62,4 +62,4 @@ async def infere_similar_quotes(query: QueryRequest, response_model=SimilarQuote
 
 
 if __name__ == "__main__":
-    uvicorn.run(app, port=3987)
+    uvicorn.run(app, port=80)

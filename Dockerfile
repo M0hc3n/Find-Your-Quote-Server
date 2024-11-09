@@ -1,18 +1,30 @@
-FROM fastdotai/fastai:latest
+# Use Python 3.12 slim image as base
+FROM python:3.12-slim
 
-RUN apt-get update && apt-get install -y git python3-dev gcc \
+# Set working directory
+WORKDIR /app
+
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
+
+# Install system dependencies
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        build-essential \
     && rm -rf /var/lib/apt/lists/*
 
+# Copy requirements file
 COPY requirements.txt .
 
-RUN pip install --upgrade -r requirements.txt
+# Install Python dependencies
+RUN pip install --no-cache-dir -r requirements.txt
 
-COPY app app/
+# Copy application code
+COPY ./app ./app
 
-RUN ls app/
+# Expose port
+EXPOSE 8000
 
-# RUN python app/server.py
-
-EXPOSE 80
-
+# Set default command
 CMD ["python", "app/server.py", "serve"]
